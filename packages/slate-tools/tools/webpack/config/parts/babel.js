@@ -6,7 +6,7 @@ const config = new SlateConfig(require('../../../../slate-tools.schema'));
 const part = {module: {rules: []}};
 
 const babelLoader = {
-  test: /\.js$/,
+  test: /\.(js|mjs|jsx|ts|tsx)$/,
   exclude: config.get('webpack.babel.exclude'),
   loader: 'babel-loader',
   options: {

@@ -20,7 +20,7 @@ const getTemplateEntrypoints = require('./utilities/get-template-entrypoints');
 const HtmlWebpackIncludeLiquidStylesPlugin = require('../html-webpack-include-chunks');
 const config = new SlateConfig(require('../../../slate-tools.schema'));
 
-module.exports = merge([
+const finalConfig = merge([
   core,
   entry,
   babel,
@@ -32,7 +32,7 @@ module.exports = merge([
 
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[name].css.liquid',
+        filename: '[name].css',
       }),
 
       new webpack.DefinePlugin({
@@ -88,11 +88,10 @@ module.exports = merge([
     ],
 
     optimization: {
-      splitChunks: {
-        chunks: 'initial',
-        name: getChunkName,
-      },
+      runtimeChunk: 'single',
     },
   },
   config.get('webpack.extend'),
 ]);
+
+module.exports = finalConfig;

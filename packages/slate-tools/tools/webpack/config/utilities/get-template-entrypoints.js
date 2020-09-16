@@ -27,42 +27,46 @@ const VALID_LIQUID_TEMPLATES = [
 
 function isValidTemplate(filename) {
   const name = VALID_LIQUID_TEMPLATES.filter((template) =>
-    filename.startsWith(`${template}.`),
+    filename.startsWith(`${template}.`)
   );
   return Boolean(name);
 }
 
-module.exports = function() {
+module.exports = function () {
   const entrypoints = {};
 
-  fs.readdirSync(config.get('paths.theme.src.templates')).forEach((file) => {
-    const name = path.parse(file).name;
-    const jsFile = path.join(
-      config.get('paths.theme.src.scripts'),
-      'templates',
-      `${name}.js`,
-    );
-
-    if (isValidTemplate(name) && fs.existsSync(jsFile)) {
-      entrypoints[`template.${name}`] = jsFile;
-    }
-  });
-
-  fs
-    .readdirSync(config.get('paths.theme.src.templates.customers'))
-    .forEach((file) => {
-      const name = `${path.parse(file).name}`;
-      const jsFile = path.join(
+  // ? [REVISIT] shared export `moduleExtentions` array
+  const extensions = ['js', 'ts', 'tsx'];
+  extensions.forEach((ext) => {
+    fs.readdirSync(config.get('paths.theme.src.templates')).forEach((file) => {
+      const name = path.parse(file).name;
+      const fileName = path.join(
         config.get('paths.theme.src.scripts'),
         'templates',
-        'customers',
-        `${name}.js`,
+        `${name}.${ext}`
       );
 
-      if (isValidTemplate(name) && fs.existsSync(jsFile)) {
-        entrypoints[`template.${name}`] = jsFile;
+      if (isValidTemplate(name) && fs.existsSync(fileName)) {
+        entrypoints[`template.${name}`] = fileName;
       }
     });
+
+    fs.readdirSync(config.get('paths.theme.src.templates.customers')).forEach(
+      (file) => {
+        const name = `${path.parse(file).name}`;
+        const fileName = path.join(
+          config.get('paths.theme.src.scripts'),
+          'templates',
+          'customers',
+          `${name}.${ext}`
+        );
+
+        if (isValidTemplate(name) && fs.existsSync(fileName)) {
+          entrypoints[`template.${name}`] = fileName;
+        }
+      }
+    );
+  });
 
   return entrypoints;
 };

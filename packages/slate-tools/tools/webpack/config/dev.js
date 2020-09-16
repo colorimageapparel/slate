@@ -19,11 +19,11 @@ const config = new SlateConfig(require('../../../slate-tools.schema'));
 // add hot-reload related code to entry chunks
 Object.keys(entry.entry).forEach((name) => {
   entry.entry[name] = [path.join(__dirname, '../hot-client.js')].concat(
-    entry.entry[name],
+    entry.entry[name]
   );
 });
 
-module.exports = merge([
+const finalConfig = merge([
   core,
   entry,
   babel,
@@ -71,6 +71,12 @@ module.exports = merge([
 
       new HtmlWebpackIncludeLiquidStylesPlugin(),
     ],
+
+    optimization: {
+      runtimeChunk: 'single',
+    },
   },
   config.get('webpack.extend'),
 ]);
+
+module.exports = finalConfig;

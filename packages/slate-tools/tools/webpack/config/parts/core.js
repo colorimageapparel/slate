@@ -7,10 +7,6 @@ const SlateSectionsPlugin = require('@shopify/slate-sections-plugin');
 const config = new SlateConfig(require('../../../../slate-tools.schema'));
 const injectLocalesIntoSettingsSchema = require('../utilities/inject-locales-into-settings-schema');
 
-const extractLiquidStyles = new ExtractTextPlugin(
-  '[name].styleLiquid.scss.liquid',
-);
-
 module.exports = {
   context: config.get('paths.theme.src'),
 
@@ -60,11 +56,6 @@ module.exports = {
           name: '../[path][name].[ext]',
         },
       },
-      {
-        test: /(css|scss|sass)\.liquid$/,
-        exclude: config.get('webpack.commonExcludes'),
-        use: extractLiquidStyles.extract(['concat-style-loader']),
-      },
     ],
   },
 
@@ -72,8 +63,6 @@ module.exports = {
     new CleanWebpackPlugin(['dist'], {
       root: config.get('paths.theme'),
     }),
-
-    extractLiquidStyles,
 
     new CopyWebpackPlugin([
       {
